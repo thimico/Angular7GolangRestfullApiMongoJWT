@@ -1,0 +1,70 @@
+<app-loading [condition]="isLoading"></app-loading>
+
+<app-toast [message]="toast.message"></app-toast>
+
+<div class="card mb-3" *ngIf="!isLoading">
+  <h4 class="card-header">Current products ({{products.length}})</h4>
+  <div class="card-body">
+    <table class="table table-bordered">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Price</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="products.length === 0">
+        <tr>
+          <td colspan="4">There are no products in the DB. Add a new product below.</td>
+        </tr>  
+      </tbody>
+      <tbody *ngIf="!isEditing">
+        <tr *ngFor="let product of products">
+          <td>{{product.name}}</td>
+          <td>{{product.price}}</td>
+          <td>
+            <button class="btn btn-sm btn-primary" (click)="enableEditing(product)">
+              <i class="fa fa-pencil"></i> Edit
+            </button> 
+            <button class="btn btn-sm btn-danger ml-1" (click)="deleteProduct(product)">
+              <i class="fa fa-trash"></i> Delete
+            </button>
+          </td>
+        </tr>  
+      </tbody>
+      <tbody *ngIf="isEditing">
+        <tr>
+          <td colspan="4">
+            <form class="form-inline" #form="ngForm" (ngSubmit)="editProduct(product)">
+              <input class="form-control mr-2" type="text" name="Name"
+                     [(ngModel)]="product.name" placeholder="Name" required>
+              <input class="form-control mr-2" type="number" name="Price"
+                     [(ngModel)]="product.price" placeholder="Price" step="any" min="0" required>
+              <button class="btn btn-sm btn-primary mr-2" type="submit" [disabled]="!form.form.valid">
+                <i class="fa fa-floppy-o"></i> Save
+              </button>
+              <button class="btn btn-sm btn-warning" (click)="cancelEditing()">
+                <i class="fa fa-times"></i> Cancel
+              </button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card" *ngIf="!isEditing">
+  <h4 class="card-header">Add new product</h4>
+  <div class="card-body">
+    <form class="form-inline" [formGroup]="addProductForm" (ngSubmit)="addProduct()">
+      <input class="form-control mr-2" type="text" name="Name"
+             formControlName="Name" placeholder="Name">
+      <input class="form-control mr-2" type="number" name="Price"
+             formControlName="Price" placeholder="Price" step="any" min="0">
+      <button class="btn btn-primary" type="submit" [disabled]="!addProductForm.valid">
+        <i class="fa fa-plus"></i> Add
+      </button>
+    </form>
+  </div>
+</div>

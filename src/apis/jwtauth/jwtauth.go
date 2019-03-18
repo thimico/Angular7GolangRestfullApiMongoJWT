@@ -8,8 +8,9 @@ import (
 	"github.com/dgrijalva/jwt-go"
 
 	"../../config"
+	"../../dao"
+	a "../../dao/abstractdao"
 	"../../entities"
-	"../../models"
 )
 
 var secretKey = "MySecretKey"
@@ -24,13 +25,12 @@ func GenerateToken(response http.ResponseWriter, request *http.Request) {
 		if err2 != nil {
 			respondWithError(response, http.StatusUnauthorized, err2.Error())
 		} else {
-			accountModel := models.AccountModel{
-				DB: db,
-			}
-			valid := accountModel.CheckUsernameAndPassword(account.Username, account.Password)
+			abstractDAO := a.AbstractDAO{DB: db, COLLECTION: "account"}
+			accountDAO := dao.AccountDAO{AbstractDAO: abstractDAO}
+			valid := accountDAO.CheckEmailAndPassword(account.Email, account.Password)
 			if valid {
 				token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-					"username": account.Username,
+					"email":    account.Email,
 					"password": account.Password,
 					"exp":      time.Now().Add(time.Hour * 72).Unix(),
 				})

@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
+
 	"gopkg.in/mgo.v2/bson"
 
 	"../../config"
+	"../../dao"
 	"../../entities"
-	"../../models"
 )
 
 func Hello(response http.ResponseWriter, request *http.Request) {
@@ -26,10 +28,10 @@ func FindAll(response http.ResponseWriter, request *http.Request) {
 		respondWithError(response, http.StatusBadRequest, err.Error())
 		return
 	} else {
-		bookModel := models.BookModel{
+		bookDAO := dao.BookDAO{
 			DB: db,
 		}
-		books, err2 := bookModel.FindAll()
+		books, err2 := bookDAO.FindAll()
 		if err2 != nil {
 			respondWithError(response, http.StatusBadRequest, err2.Error())
 			return
@@ -39,22 +41,86 @@ func FindAll(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
+func Find(response http.ResponseWriter, request *http.Request) {
+	db, err := config.Connect()
+	if err != nil {
+		respondWithError(response, http.StatusBadRequest, err.Error())
+		return
+	} else {
+		bookDAO := dao.BookDAO{
+			DB: db,
+		}
+		vars := mux.Vars(request)
+		id := vars["id"]
+		book, err2 := bookDAO.Find(id)
+		if err2 != nil {
+			respondWithError(response, http.StatusBadRequest, err2.Error())
+			return
+		} else {
+			respondWithJson(response, http.StatusOK, book)
+		}
+	}
+}
+
 // Add new book
-func createBook(response http.ResponseWriter, request *http.Request) {
+func Create(response http.ResponseWriter, request *http.Request) {
 	db, err := config.Connect()
 	if err != nil {
 		respondWithError(response, http.StatusBadRequest, err.Error())
 	} else {
-		bookModel := models.BookModel{
+		bookDAO := dao.BookDAO{
 			DB: db,
 		}
 		var book entities.Book
-		book.ID = bson.NewObjectId()
+		book.Id = bson.NewObjectId()
 		err2 := json.NewDecoder(request.Body).Decode(&book)
 		if err2 != nil {
 			respondWithError(response, http.StatusBadRequest, err2.Error())
 		} else {
-			err3 := bookModel.Create(&book)
+			err3 := bookDAO.Create(&book)
+			if err3 != nil {
+				respondWithError(response, http.StatusBadRequest, err3.Error())
+			} else {
+				respondWithJson(response, http.StatusOK, book)
+			}
+		}
+	}
+}
+
+func Delete(response http.ResponseWriter, request *http.Request) {
+	db, err := config.Connect()
+	if err != nil {
+		respondWithError(response, http.StatusBadRequest, err.Error())
+	} else {
+		bookDAO := dao.BookDAO{
+			DB: db,
+		}
+		vars := mux.Vars(request)
+		id := vars["id"]
+		err2 := bookDAO.Delete(id)
+		if err2 != nil {
+			respondWithError(response, http.StatusBadRequest, err2.Error())
+			return
+		} else {
+			respondWithJson(response, http.StatusOK, entities.Book{})
+		}
+	}
+}
+
+func Update(response http.ResponseWriter, request *http.Request) {
+	db, err := config.Connect()
+	if err != nil {
+		respondWithError(response, http.StatusBadRequest, err.Error())
+	} else {
+		bookDAO := dao.BookDAO{
+			DB: db,
+		}
+		var book entities.Book
+		err2 := json.NewDecoder(request.Body).Decode(&book)
+		if err2 != nil {
+			respondWithError(response, http.StatusBadRequest, err2.Error())
+		} else {
+			err3 := bookDAO.Update(&book)
 			if err3 != nil {
 				respondWithError(response, http.StatusBadRequest, err3.Error())
 			} else {

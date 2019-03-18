@@ -4,7 +4,8 @@ import (
 	"net/http"
 
 	"../../config"
-	"../../models"
+	"../../dao"
+	a "../../dao/abstractdao"
 )
 
 func BasicAuth(next http.Handler) http.Handler {
@@ -24,9 +25,19 @@ func CheckUsernameAndPassword(username, password string) bool {
 	if err != nil {
 		return false
 	} else {
-		accountModel := models.AccountModel{
-			DB: db,
-		}
-		return accountModel.CheckUsernameAndPassword(username, password)
+		abstractDAO := a.AbstractDAO{DB: db, COLLECTION: "account"}
+		accountDAO := dao.AccountDAO{AbstractDAO: abstractDAO}
+		return accountDAO.CheckUsernameAndPassword(username, password)
+	}
+}
+
+func CheckEmailAndPassword(email, password string) bool {
+	db, err := config.Connect()
+	if err != nil {
+		return false
+	} else {
+		abstractDAO := a.AbstractDAO{DB: db, COLLECTION: "account"}
+		accountDAO := dao.AccountDAO{AbstractDAO: abstractDAO}
+		return accountDAO.CheckEmailAndPassword(email, password)
 	}
 }
