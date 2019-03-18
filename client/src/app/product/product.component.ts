@@ -35,7 +35,7 @@ export class ProductComponent implements OnInit {
 
   getProducts() {
     this.productService.getProducts().subscribe(
-      data => this.products = data,
+      data => !!data ? this.products = data : null,
       error => console.log(error),
       () => this.isLoading = false
     );

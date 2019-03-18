@@ -3,7 +3,7 @@
 <app-toast [message]="toast.message"></app-toast>
 
 <div class="card mb-3" *ngIf="!isLoading">
-  <h4 class="card-header">Current products ({{products.length}})</h4>
+  <h4 class="card-header">Current products ({{!!products ? products.length : 0}})</h4>
   <div class="card-body">
     <table class="table table-bordered">
       <thead class="thead-light">
@@ -13,7 +13,7 @@
           <th scope="col">Actions</th>
         </tr>
       </thead>
-      <tbody *ngIf="products.length === 0">
+      <tbody *ngIf="!!products && products.length === 0">
         <tr>
           <td colspan="4">There are no products in the DB. Add a new product below.</td>
         </tr>  
