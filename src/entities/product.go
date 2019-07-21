@@ -1,15 +1,14 @@
 package entities
 
-import "gopkg.in/mgo.v2/bson"
-
 // Product struct (Model)
 type Product struct {
-	Id     bson.ObjectId `json:"id" bson:"id"`
-	Name   string        `json:"name" bson:"name"`
-	Price  float64       `json:"price" bson:"price"`
-	Status bool          `json:"status" bson:"status"`
+	Id     int `gorm:"primary_key, AUTO_INCREMENT"`
+	Name   string 
+	Price  float64
+	Quantity int
+	Status bool
 }
 
-func (e *Product) New() IEntity {
-	return e
+func (product *Product) TableName() string {
+	return "product"
 }
