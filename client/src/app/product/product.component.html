@@ -10,6 +10,7 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Price</th>
+          <th scope="col">Quantity</th>
           <th scope="col">Actions</th>
         </tr>
       </thead>
@@ -20,8 +21,10 @@
       </tbody>
       <tbody *ngIf="!isEditing">
         <tr *ngFor="let product of products">
-          <td>{{product.name}}</td>
-          <td>{{product.price}}</td>
+          <td>{{product.Name}}</td>
+          <td>{{product.Price}}</td>
+          <td>{{product.Quantity}}</td>
+
           <td>
             <button class="btn btn-sm btn-primary" (click)="enableEditing(product)">
               <i class="fa fa-pencil"></i> Edit

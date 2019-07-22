@@ -7,8 +7,6 @@ import { Book } from '../shared/entities/book.entity';
 @Injectable()
 export class BookService {
 
-  private BASE_URL: string = "http://localhost:8000/api/books/"
-
   constructor(private http: HttpClient) { }
 
   getBooks(): Observable<Book[]> {

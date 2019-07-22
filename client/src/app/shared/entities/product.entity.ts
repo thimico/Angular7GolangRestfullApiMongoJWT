@@ -1,6 +1,7 @@
 export class Product {
-    id?: string;
-    name?: string;
-    price?: string;
-    status?: boolean;
+    Id?: string;
+    Name?: string;
+    Price?: string;
+    Quantity?: number;
+    Status?: boolean;
 }

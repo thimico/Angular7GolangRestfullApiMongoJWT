@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json --open",
-    "dev": "concurrently \"ng serve --proxy-config proxy.conf.json --open\" \"go run main.go\"",
+    "dev": "concurrently \"ng serve --proxy-config proxy.conf.json --open\" \"go run ../main.go\"",
+    "prod": "concurrently \"ng build --aot --prod && tsc -p server && node dist/server/app.js\"",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -39,6 +40,7 @@
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "codelyzer": "~4.5.0",
+    "concurrently": "^4.1.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.0.0",

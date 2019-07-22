@@ -7,8 +7,6 @@ import { Product } from '../shared/entities/product.entity';
 @Injectable()
 export class ProductService {
 
-  private BASE_URL: string = "http://localhost:8000/api/products/"
-
   constructor(private http: HttpClient) { }
 
   getProducts(): Observable<Product[]> {
@@ -24,14 +22,14 @@ export class ProductService {
   }
 
   getProduct(product: Product): Observable<Product> {
-    return this.http.get<Product>(`/api/products/${product.id}`);
+    return this.http.get<Product>(`/api/products/${product.Id}`);
   }
 
   editProduct(product: Product): Observable<any> {
-    return this.http.put(`/api/products/${product.id}`, product, { responseType: 'text' });
+    return this.http.put(`/api/products/${product.Id}`, product, { responseType: 'text' });
   }
 
   deleteProduct(product: Product): Observable<any> {
-    return this.http.delete(`/api/products/${product.id}`, { responseType: 'text' });
+    return this.http.delete(`/api/products/${product.Id}`, { responseType: 'text' });
   }
 }

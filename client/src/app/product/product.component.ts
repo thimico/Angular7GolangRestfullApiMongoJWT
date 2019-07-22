@@ -82,7 +82,7 @@ export class ProductComponent implements OnInit {
     if (window.confirm('Are you sure you want to permanently delete this item?')) {
       this.productService.deleteProduct(product).subscribe(
         () => {
-          const pos = this.products.map(elem => elem.id).indexOf(product.id);
+          const pos = this.products.map(elem => elem.Id).indexOf(product.Id);
           this.products.splice(pos, 1);
           this.toast.setMessage('item deleted successfully.', 'success');
         },
